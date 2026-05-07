@@ -39,6 +39,12 @@ contract SmartAccount is BaseAccount {
         emit SmartAccountInitialized(address(entryPointAddress), _owner);
     }
 
+    /// @notice Returns the next nonce for this account
+    /// @return The current nonce from the EntryPoint
+    function getNonce() public view override returns (uint256) {
+        return entryPoint().getNonce(address(this), 0);
+    }
+
     function entryPoint() public view override returns (IEntryPoint) {
         return _entryPoint;
     }

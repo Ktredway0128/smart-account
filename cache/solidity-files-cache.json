@@ -74,8 +74,8 @@
       ]
     },
     "/Users/kyletredway/Code/smart-account/contracts/SmartAccount.sol": {
-      "lastModificationDate": 1778180804649,
-      "contentHash": "1fd5617cb096181ec78971b265ea7abb",
+      "lastModificationDate": 1778183384130,
+      "contentHash": "bedfd49d029ffd1339d0d0409380e019",
       "sourceName": "contracts/SmartAccount.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -679,8 +679,8 @@
       ]
     },
     "/Users/kyletredway/Code/smart-account/contracts/MockEntryPoint.sol": {
-      "lastModificationDate": 1778181980594,
-      "contentHash": "a46844f205ca98071f1af4f71049aa04",
+      "lastModificationDate": 1778183648686,
+      "contentHash": "5f85f97ac68ea5f0f8e4b494948804ca",
       "sourceName": "contracts/MockEntryPoint.sol",
       "solcConfig": {
         "version": "0.8.28",

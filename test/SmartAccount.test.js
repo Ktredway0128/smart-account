@@ -95,6 +95,11 @@ describe("SmartAccount", function () {
                 smartAccount.connect(owner).execute(dest.address, ethers.utils.parseEther("0.5"), "0x")
             ).to.emit(smartAccount, "TransactionExecuted");
         });
+
+        it("Should return nonce from entryPoint", async function () {
+            const nonce = await smartAccount.getNonce();
+            expect(nonce).to.equal(0);
+        });
     });
 
     // ─── Validate Signature ───────────────────────────────────────────────────

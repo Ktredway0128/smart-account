@@ -105,7 +105,7 @@ deploy.js deploys MockEntryPoint on localhost or uses the live EntryPoint on Sep
 
 TESTS
 
-Contains 21 automated tests covering SmartAccount, SmartAccountFactory, and Paymaster.
+Contains 22 automated tests covering SmartAccount, SmartAccountFactory, and Paymaster.
 
 
 ## SMART CONTRACT ARCHITECTURE
@@ -164,6 +164,8 @@ TransactionExecuted event emission
 Valid owner signature returns 0
 
 Invalid signature returns 1
+
+Returns correct nonce from entryPoint
 
 Factory deploys SmartAccount for new owner
 

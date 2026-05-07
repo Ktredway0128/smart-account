@@ -34,6 +34,10 @@ contract MockEntryPoint {
         return Paymaster(paymasterAddress).validatePaymasterUserOp(userOp, userOpHash, 0);
     }
 
+    function getNonce(address, uint192) external pure returns (uint256) {
+        return 0;
+    }
+
     function supportsInterface(bytes4 interfaceId) external pure returns (bool) {
     return interfaceId == type(IEntryPoint).interfaceId;
 }
