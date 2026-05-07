@@ -1,5 +1,5 @@
 {
-  "name": "token-multisig",
+  "name": "smart-account",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -21,7 +21,8 @@
     "hardhat": "^2.28.6"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.3",
+    "@account-abstraction/contracts": "^0.8.0",
+    "@openzeppelin/contracts": "^5.6.1",
     "dotenv": "^17.3.1"
   }
 }
