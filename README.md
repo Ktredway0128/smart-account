@@ -1,12 +1,14 @@
 # SMART ACCOUNT — ERC-4337 ACCOUNT ABSTRACTION
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![SmartAccountFactory on Etherscan](https://img.shields.io/badge/Etherscan-Verified-brightgreen)](https://sepolia.etherscan.io/address/0xe6223dB0982919e16B442f590f4F7F6d45E69324#code)
+[![Paymaster on Etherscan](https://img.shields.io/badge/Etherscan-Verified-brightgreen)](https://sepolia.etherscan.io/address/0x22D05F39E260b9fDE64d3FFa86E8f494Cfe9C396#code)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.28-blue)
 ![Hardhat](https://img.shields.io/badge/Built%20with-Hardhat-yellow)
 
 Built by [Tredway Development](https://tredwaydev.com) — professional Solidity smart contract packages for Web3 companies.
 
-A production-ready ERC-4337 Account Abstraction system built with Solidity, OpenZeppelin, and the official account-abstraction package.
+A production-ready ERC-4337 Account Abstraction system built with Solidity, OpenZeppelin v5, and the official account-abstraction package.
 
 > ⚠️ These contracts have not been professionally audited. A full security audit is strongly recommended before any mainnet deployment.
 
@@ -50,6 +52,10 @@ COUNTERFACTUAL DEPLOYMENT
 
 The factory's getAddress function computes the SmartAccount address before it is deployed. This enables pre-funding and counterfactual interactions — a core feature of production AA systems.
 
+NONCE MANAGEMENT
+
+The SmartAccount exposes getNonce() which reads the current nonce from the EntryPoint. The EntryPoint tracks nonces per account to prevent UserOperation replay attacks.
+
 EVENT TRACKING
 
 The contracts emit events for every major action:
@@ -69,7 +75,7 @@ Hardhat – Ethereum development environment
 
 OpenZeppelin Contracts v5 – Secure smart contract libraries
 
-account-abstraction – Official ERC-4337 base contracts
+account-abstraction – Official ERC-4337 base contracts from eth-infinitism
 
 Mocha & Chai – JavaScript testing framework
 
@@ -189,7 +195,7 @@ Paymaster approves any user operation
 
 Paymaster emits OperationSponsored event
 
-Edge case — MockEntryPoint supportsInterface validation
+MockEntryPoint supportsInterface validation
 
 
 ## ENVIRONMENT SETUP
@@ -238,11 +244,11 @@ Verifies SmartAccountFactory and Paymaster on Etherscan
 
 | Contract | Address | Etherscan |
 |----------|---------|-----------|
-| SmartAccountFactory | TBD | TBD |
-| Paymaster | TBD | TBD |
-| SmartAccount (demo) | TBD | TBD |
+| SmartAccountFactory | 0xe6223dB0982919e16B442f590f4F7F6d45E69324 | [View on Etherscan](https://sepolia.etherscan.io/address/0xe6223dB0982919e16B442f590f4F7F6d45E69324#code) |
+| Paymaster | 0x22D05F39E260b9fDE64d3FFa86E8f494Cfe9C396 | [View on Etherscan](https://sepolia.etherscan.io/address/0x22D05F39E260b9fDE64d3FFa86E8f494Cfe9C396#code) |
+| SmartAccount (demo) | 0x8a41995c4DAc5468C0Af9348e1DaF0878C1355d0 | [View on Etherscan](https://sepolia.etherscan.io/address/0x8a41995c4DAc5468C0Af9348e1DaF0878C1355d0) |
 
-Deployed: TBD
+Deployed: 2026/05/07
 
 
 ## SECURITY PRACTICES
@@ -258,6 +264,8 @@ BaseAccount and BasePaymaster — official ERC-4337 base contracts from eth-infi
 OpenZeppelin v5 — latest audited contract libraries
 
 Create2 deterministic deployment — predictable addresses with no collision risk
+
+EntryPoint nonce tracking — prevents UserOperation replay attacks
 
 
 ## ERC-4337 OVERVIEW
