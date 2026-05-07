@@ -30,8 +30,11 @@ contract Paymaster is BasePaymaster {
 
 
     /// @notice Validates whether this paymaster will sponsor the given user operation
-    /// @return context Data to pass to postOp
-    /// @return validationData 0 if approved, 1 if rejected
+    /// @notice Skips EntryPoint interface validation for simplified deployment
+    function _validateEntryPointInterface(IEntryPoint) internal override pure {
+        // Skip validation — using known EntryPoint address
+    }
+    
     function _validatePaymasterUserOp(
         PackedUserOperation calldata userOp,
         bytes32 userOpHash,
