@@ -1,88 +1,64 @@
-# TOKEN MULTISIG WALLET CONTRACT
+# SMART ACCOUNT — ERC-4337 ACCOUNT ABSTRACTION
 
-[![Verified on Etherscan](https://img.shields.io/badge/Etherscan-Verified-brightgreen)](https://sepolia.etherscan.io/address/0xdF102938A7E1a9b387f70a229C8D2D43f5663368#code)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Solidity](https://img.shields.io/badge/Solidity-0.8.19-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Solidity](https://img.shields.io/badge/Solidity-0.8.28-blue)
 ![Hardhat](https://img.shields.io/badge/Built%20with-Hardhat-yellow)
 
 Built by [Tredway Development](https://tredwaydev.com) — professional Solidity smart contract packages for Web3 companies.
 
-A secure and production-ready multi-signature wallet contract built with Solidity, OpenZeppelin, and Hardhat.
+A production-ready ERC-4337 Account Abstraction system built with Solidity, OpenZeppelin, and the official account-abstraction package.
 
 > ⚠️ These contracts have not been professionally audited. A full security audit is strongly recommended before any mainnet deployment.
 
-This project allows multiple owners to collectively control contract execution. No single wallet can submit and execute a transaction alone — a configurable threshold of approvals is required before any action is taken.
+This project implements a complete minimal ERC-4337 system — a SmartAccount wallet-as-a-contract, a Factory for deterministic account deployment, and a Paymaster for gas sponsorship. Together they enable gasless transactions, social recovery, and programmable wallet logic without changing the Ethereum protocol.
 
 Smart contract development
 Automated testing
 Deployment scripting
 Security best practices
 
-This contract is part of the Tredway Development full token suite, which includes token launch, vesting, airdrop, staking, crowdsale, governance, and multisig infrastructure.
-
-## DASHBOARD
-
-Live dashboard: [token-multisig-dashboard.netlify.app](https://token-multisig-dashboard.netlify.app)
-
-Dashboard repository: [token-multisig-dashboard](https://github.com/Ktredway0128/token-multisig-dashboard)
-
-
 ## PROJECT GOALS
 
-The purpose of this project is to give Web3 projects a trustless way to manage shared control over smart contracts and protocol actions.
+The purpose of this project is to demonstrate a complete ERC-4337 Account Abstraction implementation — the infrastructure layer that makes Web3 wallets as easy to use as any regular app.
 
-The contract includes the core features required by a production multisig wallet:
+The system includes the three core contracts required by a production AA deployment:
 
-Multi-owner transaction approval
-Configurable approval threshold
-Transaction submission and queuing
-Approval revocation before execution
-Reentrancy protected execution
+SmartAccount — wallet-as-a-contract with owner-controlled execution and signature validation
+SmartAccountFactory — deterministic account deployment using Create2
+Paymaster — gas sponsorship so users never need ETH to interact
 
 
 ## SMART CONTRACT FEATURES
 
-MULTI-OWNER CONTROL
+SMART ACCOUNT
 
-Transactions require a configurable number of owner approvals before execution. No single wallet has unilateral control regardless of their role in the project.
+A wallet implemented as a smart contract extending ERC-4337's BaseAccount. The owner signs UserOperations which are validated on chain. The account can execute any transaction — ETH transfers, contract calls, or encoded function calls — when called by the EntryPoint or the owner directly.
 
-CONFIGURABLE THRESHOLD
+SMART ACCOUNT FACTORY
 
-The required number of approvals is set at deployment. A 2 of 3 or 3 of 5 configuration can be chosen to match the team structure of any project.
+Deploys new SmartAccounts on demand using Create2 for deterministic address generation. The account address is predictable before deployment — users can receive funds at their future address before the account even exists. Re-deploying with the same owner and salt returns the existing account without creating a duplicate.
 
-TRANSACTION QUEUING
+PAYMASTER
 
-Proposed transactions are stored on chain with their destination, value, and encoded call data. Owners can review, approve, or revoke at any time before execution.
+Sponsors gas fees on behalf of users so they never need ETH to interact with a dApp. Extends ERC-4337's BasePaymaster. The simple implementation approves all operations — production deployments can add rules like whitelists, spending limits, or per-user quotas.
 
-APPROVAL REVOCATION
+SIGNATURE VALIDATION
 
-Any owner can revoke their approval before a transaction is executed. If approvals drop below the threshold the transaction cannot proceed until the threshold is met again.
+The SmartAccount validates that each UserOperation was signed by the owner using ECDSA signature recovery. Returns 0 for valid signatures and 1 for invalid — the standard ERC-4337 validation pattern.
 
-ARBITRARY EXECUTION
+COUNTERFACTUAL DEPLOYMENT
 
-The multisig can call any function on any contract by encoding the call data into the transaction. This makes it suitable as the owner or admin of any contract in the suite.
-
-REENTRANCY PROTECTION
-
-The contract uses OpenZeppelin's ReentrancyGuard on the execute function. State is updated before any external call to prevent reentrancy attacks.
-
-DUPLICATE OWNER PREVENTION
-
-The constructor validates that no address appears twice in the owner list and that no zero address is included.
+The factory's getAddress function computes the SmartAccount address before it is deployed. This enables pre-funding and counterfactual interactions — a core feature of production AA systems.
 
 EVENT TRACKING
 
-The contract emits events for every major action:
+The contracts emit events for every major action:
 
-TransactionSubmitted
+SmartAccountInitialized — on account creation
 
-TransactionApproved
+TransactionExecuted — on every execution
 
-ApprovalRevoked
-
-TransactionExecuted
-
-Events are indexed by transaction index and owner address for efficient frontend filtering.
+OperationSponsored — on every sponsored UserOperation
 
 
 ## TECHNOLOGY STACK
@@ -91,9 +67,9 @@ Solidity – Smart contract programming language
 
 Hardhat – Ethereum development environment
 
-Ethers.js – Contract interaction library
+OpenZeppelin Contracts v5 – Secure smart contract libraries
 
-OpenZeppelin Contracts – Secure smart contract libraries
+account-abstraction – Official ERC-4337 base contracts
 
 Mocha & Chai – JavaScript testing framework
 
@@ -105,56 +81,63 @@ Sepolia Test Network – Deployment environment
 ## PROJECT STRUCTURE
 
 contracts/
-    MultiSigWallet.sol
+    SmartAccount.sol
+    SmartAccountFactory.sol
+    Paymaster.sol
+    MockEntryPoint.sol
 
 scripts/
-    deploy-multisig.js
+    deploy.js
 
 test/
-    MultiSigWallet.test.js
+    SmartAccount.test.js
 
 hardhat.config.js
 .env
 
 CONTRACTS
 
-MultiSigWallet.sol is the core deliverable. No auxiliary token contract is required — the multisig operates independently of any specific token standard.
+SmartAccount.sol is the core wallet contract. SmartAccountFactory.sol handles deterministic deployment. Paymaster.sol sponsors gas fees. MockEntryPoint.sol is a test harness only — not deployed to production networks.
 
 SCRIPTS
 
-deploy-multisig.js deploys MultiSigWallet to the target network, saves deployment info to a JSON file, and verifies on Etherscan when deploying to Sepolia.
+deploy.js deploys MockEntryPoint on localhost or uses the live EntryPoint on Sepolia, then deploys SmartAccountFactory and Paymaster, creates a demo SmartAccount via the factory, saves all addresses to a JSON file, and verifies on Etherscan when deploying to Sepolia.
 
 TESTS
 
-Contains 28 automated tests verifying all major contract behaviors and edge cases.
+Contains 21 automated tests covering SmartAccount, SmartAccountFactory, and Paymaster.
 
 
 ## SMART CONTRACT ARCHITECTURE
 
-The MultiSigWallet contract extends OpenZeppelin's ReentrancyGuard and implements the following:
+The system follows the ERC-4337 standard without modifying the Ethereum protocol:
 
-ReentrancyGuard – Prevents reentrancy attacks on execute
+UserOperation → alt mempool → Bundler → EntryPoint → validateUserOp → execute
 
-Custom owner validation – Built without OpenZeppelin Ownable to support multi-owner consensus logic
+SmartAccount extends BaseAccount and implements _validateSignature using ECDSA recovery and _requireFromEntryPointOrOwner for access control.
 
-Dual owner tracking – Uses both an address array for iteration and a mapping for O(1) ownership lookups
+SmartAccountFactory uses OpenZeppelin's Create2 library for deterministic address computation. The same owner and salt always produce the same address on any network.
 
-Each transaction is stored as a struct containing the destination address, ETH value, call data, execution status, and approval count. Transactions are organized in a mapping from transaction index to Transaction struct, exposed through controlled view functions.
+Paymaster extends BasePaymaster and implements _validatePaymasterUserOp. The current implementation approves all operations and emits an OperationSponsored event. Production rules can be added without changing the interface.
+
+The real EntryPoint is deployed at the same address on all EVM networks:
+
+0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789
 
 
 ## INSTALLATION
 
 ### CLONE THE REPOSITORY:
 
-git clone https://github.com/Ktredway0128/token-multisig
+git clone https://github.com/Ktredway0128/smart-account
 
-cd token-multisig
+cd smart-account
 
 ### INSTALL DEPENDENCIES:
 
 npm install
 
-### COMPILE THE CONTRACT:
+### COMPILE THE CONTRACTS:
 
 npx hardhat compile
 
@@ -164,27 +147,47 @@ npx hardhat test
 
 ### THE TESTS VALIDATE:
 
-Correct owner and threshold setup at deployment
+Correct owner and entryPoint setup at deployment
 
-Rejection of invalid deployment configurations
+SmartAccountInitialized event emission
 
-Transaction submission by owners
+ETH deposit via receive function
 
-Rejection of submission by non owners
+Transaction execution by owner
 
-Approval tracking per owner
+Transaction execution by entryPoint
 
-Double approval prevention
+Rejection of execution by non-owner
 
-Approval revocation
+TransactionExecuted event emission
 
-Execution after threshold is met
+Valid owner signature returns 0
 
-Execution rejection below threshold
+Invalid signature returns 1
 
-Double execution prevention
+Factory deploys SmartAccount for new owner
 
-Edge case — revoke drops below threshold before execution
+Factory returns same address for same owner and salt
+
+Factory returns different addresses for different salts
+
+Factory returns different addresses for different owners
+
+Factory does not redeploy existing accounts
+
+Factory sets correct owner on deployed SmartAccount
+
+Factory sets correct entryPoint on deployed SmartAccount
+
+Paymaster sets correct entryPoint
+
+Paymaster sets deployer as owner
+
+Paymaster approves any user operation
+
+Paymaster emits OperationSponsored event
+
+Edge case — MockEntryPoint supportsInterface validation
 
 
 ## ENVIRONMENT SETUP
@@ -200,60 +203,74 @@ ETHERSCAN_API_KEY=YOUR_ETHERSCAN_API_KEY
 
 ## DEPLOYMENT
 
-To deploy the contract to Sepolia:
+### LOCAL DEPLOYMENT:
 
-npx hardhat run scripts/deploy-multisig.js --network sepolia
+npx hardhat node
+
+npx hardhat run scripts/deploy.js --network localhost
+
+On localhost the script deploys a MockEntryPoint first since the real EntryPoint only exists on live networks.
+
+### SEPOLIA DEPLOYMENT:
+
+npx hardhat run scripts/deploy.js --network sepolia
 
 The deployment script performs the following steps:
 
-Retrieves the deployer wallet
+Uses the live EntryPoint at 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789
 
-Creates the contract factory
+Deploys SmartAccountFactory with the EntryPoint address
 
-Deploys MultiSigWallet with owner addresses and required threshold
+Deploys Paymaster with the EntryPoint address
 
-Saves deployment info to deployments/sepolia.json
+Creates a demo SmartAccount via the factory using salt 0
+
+Saves all deployment addresses to deployments/sepolia.json
 
 Waits for block confirmations
 
-Verifies the contract on Etherscan
+Verifies SmartAccountFactory and Paymaster on Etherscan
 
 
 ### SEPOLIA TESTNET DEPLOYMENT
 
 | Contract | Address | Etherscan |
 |----------|---------|-----------|
-| MultiSigWallet | 0xdF102938A7E1a9b387f70a229C8D2D43f5663368 | https://sepolia.etherscan.io/address/0xdF102938A7E1a9b387f70a229C8D2D43f5663368#code |
+| SmartAccountFactory | TBD | TBD |
+| Paymaster | TBD | TBD |
+| SmartAccount (demo) | TBD | TBD |
 
-Deployed: 2026/5/01
+Deployed: TBD
 
 
 ## SECURITY PRACTICES
 
-The contract uses well-established patterns from OpenZeppelin and Gnosis Safe including:
+The contracts follow ERC-4337 standard patterns including:
 
-ReentrancyGuard on the execute function
+ECDSA signature validation — only the owner can authorize UserOperations
 
-Checks-effects-interactions pattern — state updated before external call
+_requireFromEntryPointOrOwner — execution restricted to EntryPoint or owner
 
-Dual owner tracking for gas efficient validation
+BaseAccount and BasePaymaster — official ERC-4337 base contracts from eth-infinitism
 
-No single point of control — all actions require multi-owner consensus
+OpenZeppelin v5 — latest audited contract libraries
 
-These are common practices used in production smart contracts.
+Create2 deterministic deployment — predictable addresses with no collision risk
 
 
-## EXAMPLE USE CASES
+## ERC-4337 OVERVIEW
 
-This multisig wallet contract is suitable for:
+ERC-4337 enables Account Abstraction without protocol changes by introducing:
 
-Protocol teams requiring shared control over admin functions
+UserOperation — a new transaction type describing what the user wants to do
 
-DAOs needing trustless multi-owner execution
+Alt Mempool — a separate mempool for UserOperations
 
-Projects transferring contract ownership to a multisig for security
+Bundler — collects UserOperations and submits them to the EntryPoint
 
-Any team handling treasury or privileged contract actions
+EntryPoint — validates and executes UserOperations through SmartAccounts
+
+Paymaster — optional gas sponsor so users never need ETH
 
 
 ## FULL TOKEN SUITE
@@ -273,6 +290,8 @@ This contract is part of the Tredway Development token suite:
 | NftMembership | ERC-721 membership NFT |
 | LiquidityLock | LP token time lock |
 | MultiSigWallet | Multi-owner transaction approval |
+| Treasury | ETH and ERC-20 fund vault |
+| SmartAccount | ERC-4337 Account Abstraction system |
 
 
 ## AUTHOR
