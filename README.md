@@ -128,7 +128,16 @@ Paymaster extends BasePaymaster and implements _validatePaymasterUserOp. The cur
 
 The real EntryPoint is deployed at the same address on all EVM networks:
 
-0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789
+0x0000000071727De22E5E9d8BAf0edAc6f37da032
+
+
+## DASHBOARD
+
+Live dashboard: [account-abstraction-dashboard.netlify.app](https://account-abstraction-dashboard.netlify.app)
+
+Demo video: [YouTube](https://youtu.be/Z47AWnMaIoM)
+
+Dashboard repository: [aa-dashboard](https://github.com/Ktredway0128/aa-dashboard)
 
 
 ## INSTALLATION
@@ -244,9 +253,9 @@ Verifies SmartAccountFactory and Paymaster on Etherscan
 
 | Contract | Address | Etherscan |
 |----------|---------|-----------|
-| SmartAccountFactory | 0xe6223dB0982919e16B442f590f4F7F6d45E69324 | [View on Etherscan](https://sepolia.etherscan.io/address/0xe6223dB0982919e16B442f590f4F7F6d45E69324#code) |
-| Paymaster | 0x22D05F39E260b9fDE64d3FFa86E8f494Cfe9C396 | [View on Etherscan](https://sepolia.etherscan.io/address/0x22D05F39E260b9fDE64d3FFa86E8f494Cfe9C396#code) |
-| SmartAccount (demo) | 0x8a41995c4DAc5468C0Af9348e1DaF0878C1355d0 | [View on Etherscan](https://sepolia.etherscan.io/address/0x8a41995c4DAc5468C0Af9348e1DaF0878C1355d0) |
+| SmartAccountFactory | 0x645B6109ac481A3CD718de39EAD349B3133F6665 | [View on Etherscan](https://sepolia.etherscan.io/address/0x645B6109ac481A3CD718de39EAD349B3133F6665#code) |
+| Paymaster | 0x3650103302EC76afBA9BB10FdA71601648003655 | [View on Etherscan](https://sepolia.etherscan.io/address/0x3650103302EC76afBA9BB10FdA71601648003655#code) |
+| SmartAccount (demo) | 0x54ce6C696A396AF6b33Ec99B7B7DBF5d5cA19De3 | [View on Etherscan](https://sepolia.etherscan.io/address/0x54ce6C696A396AF6b33Ec99B7B7DBF5d5cA19De3) |
 
 Deployed: 2026/05/07
 
